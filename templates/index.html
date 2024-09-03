@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Summarization</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #f4f4f4;
+        color: #333;
+        padding: 0;
+        margin: 0;
+      }
+      header {
+        background: #4caf50;
+        color: #fff;
+        padding: 1rem;
+        text-align: center;
+      }
+      main {
+        padding: 2rem;
+      }
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      #summaryOutput {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      footer {
+        text-align: center;
+        color: white;
+        background-color: #45a049;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Text Summarization Tool</h1>
+    </header>
+    <main>
+      <section>
+        <h2>Input Text</h2>
+        <textarea
+          id="textInput"
+          rows="10"
+          placeholder="Enter text here..."
+        ></textarea>
+        <label for="wordLimit">Word Limit:</label>
+        <input type="number" id="wordLimit" value="50" min="1" />
+        <button onclick="generateSummary()">Generate Summary</button>
+        <div id="summaryOutput"></div>
+      </section>
+      <footer><p>&copy Pratyusha Kumar Pati</p></footer>
+    </main>
+    <script>
+      function generateSummary() {
+        const textInput = document.getElementById("textInput").value.trim();
+        const wordLimit = parseInt(
+          document.getElementById("wordLimit").value,
+          10
+        );
+
+        if (textInput === "" || isNaN(wordLimit) || wordLimit <= 0) {
+          document.getElementById("summaryOutput").innerText =
+            "Please enter valid text and word limit.";
+          return;
+        }
+
+        // Split text into sentences
+        const sentences = textInput
+          .split(".")
+          .filter((sentence) => sentence.trim() !== "");
+        const wordFrequency = {};
+
+        // Calculate word frequency
+        sentences.forEach((sentence) => {
+          sentence.split(/\s+/).forEach((word) => {
+            word = word.toLowerCase().replace(/[^a-z]/g, "");
+            if (word) {
+              wordFrequency[word] = (wordFrequency[word] || 0) + 1;
+            }
+          });
+        });
+
+        // Score sentences based on word frequency
+        const sentenceScores = sentences.map((sentence) => {
+          let score = 0;
+          sentence.split(/\s+/).forEach((word) => {
+            word = word.toLowerCase().replace(/[^a-z]/g, "");
+            if (wordFrequency[word]) {
+              score += wordFrequency[word];
+            }
+          });
+          return { sentence, score };
+        });
+
+        // Sort sentences by score
+        sentenceScores.sort((a, b) => b.score - a.score);
+
+        // Select sentences until word limit is reached
+        let summary = "";
+        let wordsCount = 0;
+        for (const { sentence } of sentenceScores) {
+          const sentenceWords = sentence
+            .split(/\s+/)
+            .filter((word) => word.length > 0);
+          if (wordsCount + sentenceWords.length <= wordLimit) {
+            summary += sentence + ". ";
+            wordsCount += sentenceWords.length;
+          } else {
+            break;
+          }
+        }
+
+        // Display the summary
+        document.getElementById("summaryOutput").innerText =
+          summary.trim() || "No summary available.";
+      }
+    </script>
+  </body>
+</html>
