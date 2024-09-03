@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import your_nlp_module  # This will be the module where your NLP code resides
+import nlp_module  # This will be the module where your NLP code resides
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ def home():
 @app.route('/summarize', methods=['POST'])
 def summarize():
     text = request.form['text']
-    summary = your_nlp_module.summarize(text)
+    summary = nlp_module.summarize(text)
     return jsonify({'summary': summary})
 
 if __name__ == '__main__':
