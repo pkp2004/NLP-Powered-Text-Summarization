@@ -9,6 +9,6 @@ This project focuses on developing a web application that utilizes Natural Langu
 
 <h2>Future Enhancements:</h2>
 
-Support for multiple languages
-Integration with external APIs for broader document processing capabilities
-Advanced summarization techniques, such as abstractive summarization using transformer models
+Support for multiple languages<br>
+Integration with external APIs for broader document processing capabilities<br>
+Advanced summarization techniques, such as abstractive summarization using transformer models<br>
